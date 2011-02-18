@@ -89,7 +89,7 @@ int numberOfBubblesortCalls = 0;
 
 void bubblesort(Bee[] bees) {
   ++numberOfBubblesortCalls;
-  if (logLevel > 1 && (numberOfBubblesortCalls % (logLevel <= 1 ? 1000 : 100)) == 0) {
+  if (logLevel >= 3 && (numberOfBubblesortCalls % (logLevel <= 3 ? 1000 : 100)) == 0) {
     println("Number of Bubblesort Calls:       " + numberOfBubblesortCalls);
     println("Number of Bubble Calls:           " + numberOfBubbleCalls);
     println("Bubble Calls per Bubblesort Call: " + numberOfBubbleCalls/numberOfBubblesortCalls);
