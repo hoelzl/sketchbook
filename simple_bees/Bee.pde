@@ -7,19 +7,19 @@ color speedColor(float vx, float vy) {
   return color(speed/normalizationFactor, 0, 255 - speed/normalizationFactor);
 }
 
-class Bee {
+class Bee extends Circle {
   public Bee() {
     this(random(width), random(height));
   }
   
   public Bee(float x, float y) {
-    this.x = x;
-    this.y = y;
+    super(x, y, 10.0);
     lastUpdate = millis();
     vx = random(-maxSpeed, maxSpeed);
     float maxSpeedY = sqrt(maxSpeed * maxSpeed - vx * vx);
     vy = random(-maxSpeedY, maxSpeedY);
-    backgroundColor = speedColor(vx, vy);
+    this.strokeColor = color(0);
+    this.backgroundColor = speedColor(vx, vy);
   }
   
   // Note: we make all instance variables public since there seem to be
@@ -29,17 +29,9 @@ class Bee {
   // The time of the last update.
   public float lastUpdate;
   
-  // The x and y positions.
-  public float x;
-  public float y;
-  
   // The x and y velocities in pixels/s
   public float vx;
   public float vy;
-  
-  // The diameter of the circle representing the bee
-  public float diameter = 10.0;
-  public color backgroundColor;
   
   public float velocity() {
     return sqrt(vx * vx + vy * vy);
@@ -49,11 +41,6 @@ class Bee {
     this.vx = vx;
     this.vy = vy;
     backgroundColor = speedColor(vx, vy);
-  }
-  
-  public void paint() {
-    fill(backgroundColor);
-    ellipse(x, y, diameter, diameter);
   }
   
   public void detectCollision(Bee other) {

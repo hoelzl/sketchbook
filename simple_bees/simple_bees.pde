@@ -1,7 +1,7 @@
 Bee[] allBees;
 int numberOfBees = 100;
 
-int logLevel = 2;
+int logLevel = 1;
 boolean transferImpulse = true;
 
 void setup() {
