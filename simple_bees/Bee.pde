@@ -36,7 +36,8 @@ class Bee extends Circle {
     strokeColor = color(0);
     backgroundColor = speedColor(vx, vy);
     
-    behavior = new SleepInTheSpotlightAndChangeDirection();
+    // behavior = new SleepInTheSpotlightAndChangeDirection();
+    behavior = new FollowTheGradient();
     
     if (transferImpulse) {
       collisionBehavior = new CollideAndTransferImpulse();

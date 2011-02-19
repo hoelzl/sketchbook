@@ -33,7 +33,6 @@ class Circle {
     ellipse(x, y, diameter, diameter);
   }
   
-  
   // Compute the distance of point (x, y) from the center of this circle.
   public float distanceFromCenter(float x, float y) {
     float distanceX = this.x - x;
@@ -44,5 +43,10 @@ class Circle {
   public boolean intersects(Circle other) {
     float distance = distanceFromCenter(other.x, other.y);
     return 2.0 * distance <= this.diameter + other.diameter;
+  }
+  
+  // Returns the vector from the point (x, y) to the center of the circle.
+  public PVector directionToOriginFrom(float x, float y) {
+    return new PVector(this.x - x, this.y - y);
   }
 }

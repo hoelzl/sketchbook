@@ -4,7 +4,7 @@ Bee[] allBees;
 int numberOfBees = 100;
 
 int logLevel = 1;
-boolean transferImpulse = false;
+boolean transferImpulse = true;
 
 void setup() {
   smooth();
