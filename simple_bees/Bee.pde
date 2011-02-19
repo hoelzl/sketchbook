@@ -16,11 +16,6 @@ class Bee extends Circle {
   // The time of the last update.
   public float lastUpdate;
   
-  // The time when we want to go to sleep.
-  public float bedtime = -1.0;
-  // The time when we want to wake up from a sleep.
-  public float wakeUpTime;
-  
   // The x and y velocities in pixels/s
   public float vx;
   public float vy;
@@ -50,8 +45,14 @@ class Bee extends Circle {
     }
   }
   
+  // Note that we have updated the bee's data at the current time.
   public void noteUpdate() {
     lastUpdate = millis();
+  }
+  
+  // Note that we will probably not update the bee's data until time.
+  public void noteUpdate(float time) {
+    lastUpdate = time;
   }
   
   public void perform() {
@@ -62,11 +63,16 @@ class Bee extends Circle {
     return sqrt(vx * vx + vy * vy);
   }
 
-  // TODO: There should also be a setVelocity(float totalVelocity) method for
-  // symmetry with the velocity() accessor.  However it's not currently needed,
-  // so I'm too lazy to actually implement it.  And if somebody asks I'm totally
-  // going to justify this with the YAGNI principle.
-  //
+  public void setVelocity(float totalVelocity) {
+    float currentVelocity = velocity();
+    while (currentVelocity == 0.0) {
+      assignRandomVelocity();
+    }
+    float factor = totalVelocity / currentVelocity;
+    vx *= factor;
+    vy *= factor;
+  }
+
   public void setVelocity(float vx, float vy) {
     this.vx = vx;
     this.vy = vy;
@@ -77,6 +83,15 @@ class Bee extends Circle {
     vx = random(-maxSpeed, maxSpeed);
     float maxSpeedY = sqrt(maxSpeed * maxSpeed - vx * vx);
     vy = random(-maxSpeedY, maxSpeedY);
+  }
+  
+  // Change the direction by adding (dx, dy) to the current velocity, but then
+  // change the velocity in the new direction back to the old velocity. 
+  public void changeDirection(float dx, float dy) {
+    float oldVelocity = velocity();
+    vx += dx;
+    vy += dy;
+    setVelocity(oldVelocity);
   }
   
   public void detectCollision(Bee other) {
@@ -98,6 +113,11 @@ class Bee extends Circle {
     }
     // ... and behave accordingly.
     collisionBehavior.collide(this, other, distanceX, distanceY, distance);
+  }
+  
+  // Invoked by the CollisionBehavior when the collision behavior is completed.
+  public void noteCollision() {
+    behavior.noteCollision(this);
   }
   
   public void move() {
@@ -123,16 +143,5 @@ class Bee extends Circle {
     else if (y < diameter && vy < 0) {
       vy = - vy;
     }   
-  }
-  
-  public void sleep(float sleepDurationInMilliseconds) {
-     wakeUpTime = max(wakeUpTime, millis() + sleepDurationInMilliseconds);
-     lastUpdate = wakeUpTime;
-  }
-  
-  public void wakeUp() {
-    wakeUpTime = -1.0;
-    bedtime = -1.0;
-    lastUpdate = millis();
   }
 }

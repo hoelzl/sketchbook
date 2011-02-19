@@ -13,8 +13,8 @@ class CollideAndTransferImpulse implements CollisionBehavior {
     float bee2Ratio = bee2.velocity() / distance;
     bee1.setVelocity(bee2Ratio * distanceX, bee2Ratio * distanceY);
     bee2.setVelocity(-bee1Ratio * distanceX, -bee1Ratio * distanceY);
-    bee1.wakeUp();
-    bee2.wakeUp();
+    bee1.noteCollision();
+    bee2.noteCollision();
   }
 }
 
@@ -24,7 +24,7 @@ class CollideWithoutChangingImpulse implements CollisionBehavior {
     float bee2Ratio = bee2.velocity() / distance;
     bee1.setVelocity(bee1Ratio * distanceX, bee1Ratio * distanceY);
     bee2.setVelocity(-bee2Ratio * distanceX, -bee2Ratio * distanceY);
-    bee1.wakeUp();
-    bee2.wakeUp();
+    bee1.noteCollision();
+    bee2.noteCollision();
   }
 }
