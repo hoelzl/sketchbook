@@ -4,7 +4,7 @@ float maxSpeed = 50.0;
 color speedColor(float vx, float vy) {
   float normalizationFactor = (maxSpeed * maxSpeed) / 255.0;
   float speed = vx * vx + vy * vy;
-  return color(speed/normalizationFactor, 0, 255 - speed/normalizationFactor);
+  return color(speed/normalizationFactor, 30, 255 - speed/normalizationFactor);
 }
 
 class Bee extends Circle {

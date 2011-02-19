@@ -1,3 +1,8 @@
+/**
+ * The behavior invoked by bees when they collide.
+ * (distanceX, distanceY) is the vector from bee2 to bee1;
+ * distance is its magnitude.
+ */
 interface CollisionBehavior {
   public void collide(Bee bee1, Bee bee2, float distanceX, float distanceY, float distance);
 }

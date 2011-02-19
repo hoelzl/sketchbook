@@ -1,3 +1,5 @@
+Spotlight spotlight;
+
 Bee[] allBees;
 int numberOfBees = 100;
 
@@ -9,6 +11,9 @@ void setup() {
   // Should be set from variables, but that causes the applet export to
   // generate a HTML file with the wrong dimensions.
   size(600, 600);
+
+  spotlight = new Spotlight(300, 300);
+
   allBees = new Bee[numberOfBees];
   for (int i = 0; i < numberOfBees; ++i) {
     allBees[i] = new Bee();
@@ -126,6 +131,11 @@ void paintBees(Bee[] bees) {
 
 void draw() {
   background(120);
+  if (mousePressed) {
+    spotlight.x = mouseX;
+    spotlight.y = mouseY;
+  }
+  spotlight.paint();
   moveBees(allBees);
   detectCollisions(allBees);
   paintBees(allBees);
