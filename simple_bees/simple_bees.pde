@@ -1,3 +1,22 @@
+/**
+<h1><tt>simple_bees</tt>&mdash;experiments with swarm algorithms</h1>
+
+<p>You can use the following key commands to control the behavior:</p>
+<dl>
+  <dt><tt>1-8</tt></dt>
+  <dd>Change the speed of the bees</dd>
+  <dt><tt>gGsSrR</tt></dt>
+  <dd>Change the algorithm used by the bees</dd>
+  <dt><tt>i</tt></dt>
+  <dd>Toggle the transferImpulse setting</dd>
+  <dt><tt>+-</tt></dt>
+  <dd>Change the size of the spotlight</dd>
+  <dt><em>Mouse</em></dt>
+  <dd>Move the spotlight around</dd>
+</dl>
+
+ */
+ 
 Spotlight spotlight;
 
 Bee[] allBees;
@@ -6,11 +25,17 @@ int numberOfBees = 100;
 int logLevel = 1;
 boolean transferImpulse = true;
 
+PFont font;
+String string;
+float drawTextUntil;
+
 void setup() {
   smooth();
   // Should be set from variables, but that causes the applet export to
   // generate a HTML file with the wrong dimensions.
   size(600, 600);
+  font = loadFont("LinuxBiolinumGI-24.vlw");
+  textFont(font);
 
   spotlight = new Spotlight(300, 300);
 
@@ -21,89 +46,10 @@ void setup() {
   bubblesort(allBees);
 }
 
-void invokeBeeBehaviors(Bee[] bees) {
+void performBeeBehaviors(Bee[] bees) {
   for (Bee bee : bees) {
     bee.perform();
   }
-}
-
-void swap(Bee[] bees, int i) {
-  Bee tmp = bees[i];
-  bees[i] = bees[i+1];
-  bees[i+1] = tmp;  
-}
-
-int findUnsortedEntry(Bee[] bees) {
-  for (int i = 0; i < bees.length - 1; ++i) {
-    if (bees[i].x > bees[i+1].x)
-      return i;
-  }
-  return -1;
-}
-
-String xValuesOf(Bee[] bees) {
-  return xValuesOf(bees, -1);
-}
-
-String xValuesOf(Bee[] bees, int emphasizedIndex) {
-  StringBuffer result = new StringBuffer("[");
-  String separator = "";
-  for (int i = 0; i < bees.length; ++i) {
-    result.append(separator);
-    separator = ", ";
-    Bee bee = bees[i];
-    if (i == emphasizedIndex) {
-      result.append("***");
-      result.append(bee.x);
-      result.append("***");
-    }
-    else {
-      result.append(bee.x);
-    }
-  }
-  result.append("]");
-  return result.toString();
-}
-
-void assertSorted(Bee[] bees) {
-  int unsortedEntry = findUnsortedEntry(bees);
-  if (unsortedEntry != -1) {
-    assert false : "Failed to sort " + xValuesOf(bees, unsortedEntry) + "!";    
-  }
-}
-
-int numberOfBubbleCalls = 0;
-
-int bubble(Bee[] bees, int maxIndex) {
-  ++numberOfBubbleCalls;
-  int result = -1;
-  for (int i = 0; i < maxIndex - 1; ++i) {
-    if (bees[i].x > bees[i+1].x) {
-      result = i + 1;
-      swap(bees, i);
-    }
-  }
-  return result;
-}
-
-int bubble(Bee[] bees) {
-  return bubble(bees, bees.length);
-}
-
-int numberOfBubblesortCalls = 0;
-
-void bubblesort(Bee[] bees) {
-  ++numberOfBubblesortCalls;
-  if (logLevel >= 3 && (numberOfBubblesortCalls % (logLevel <= 3 ? 1000 : 100)) == 0) {
-    println("Number of Bubblesort Calls:       " + numberOfBubblesortCalls);
-    println("Number of Bubble Calls:           " + numberOfBubbleCalls);
-    println("Bubble Calls per Bubblesort Call: " + numberOfBubbleCalls/numberOfBubblesortCalls);
-  }
-  int maxIndex = bees.length;
-  while (maxIndex > 0) {
-    maxIndex = bubble(bees, maxIndex);
-  }
-  assertSorted(bees);
 }
 
 void detectCollisions(Bee[] bees) {
@@ -136,8 +82,13 @@ void draw() {
     spotlight.y = mouseY;
   }
   spotlight.paint();
-  invokeBeeBehaviors(allBees);
+  processKeyboardInteraction();
+  performBeeBehaviors(allBees);
   detectCollisions(allBees);
   paintBees(allBees);
+  if (drawTextUntil >= millis()) {
+    fill(color(255));
+    text(string, 20, 20, 500, 300);
+  }
 }
 

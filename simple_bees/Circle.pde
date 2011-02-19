@@ -1,3 +1,7 @@
+/**
+ * The superclass of objects with circular representation,
+ * i.e., basically everything.
+ */
 class Circle {
   // The x and y position of the center.
   public float x;

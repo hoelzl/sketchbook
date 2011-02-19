@@ -1,11 +1,6 @@
-// The maximum speed.
-float maxSpeed = 50.0;
-
-color speedColor(float vx, float vy) {
-  float normalizationFactor = (maxSpeed * maxSpeed) / 255.0;
-  float speed = vx * vx + vy * vy;
-  return color(speed/normalizationFactor, 30, 255 - speed/normalizationFactor);
-}
+// The minimum and maximum speed.
+float minSpeed = 30.0;
+float maxSpeed = 60.0;
 
 class Bee extends Circle {
   
@@ -37,7 +32,7 @@ class Bee extends Circle {
     backgroundColor = speedColor(vx, vy);
     
     // behavior = new SleepInTheSpotlightAndChangeDirection();
-    behavior = new FollowTheGradient();
+    behavior = new FollowTheGradientVelocityDependentChange();
     
     if (transferImpulse) {
       collisionBehavior = new CollideAndTransferImpulse();
@@ -81,9 +76,9 @@ class Bee extends Circle {
   }
   
   public void assignRandomVelocity() {
-    vx = random(-maxSpeed, maxSpeed);
-    float maxSpeedY = sqrt(maxSpeed * maxSpeed - vx * vx);
-    vy = random(-maxSpeedY, maxSpeedY);
+    vx = random(-1, 1);
+    vy = random(-1, 1);
+    setVelocity(random(minSpeed, maxSpeed));
   }
   
   // Change the direction by adding (dx, dy) to the current velocity, but then
@@ -119,6 +114,14 @@ class Bee extends Circle {
   // Invoked by the CollisionBehavior when the collision behavior is completed.
   public void noteCollision() {
     behavior.noteCollision(this);
+  }
+  
+    
+  public void moveScaled(float velocityScale) {
+    float currentTime = millis();
+    float dt = (currentTime - lastUpdate) / 1000.0;
+    lastUpdate = currentTime;
+    move(velocityScale * vx * dt, velocityScale * vy * dt);
   }
   
   public void move() {
