@@ -16,10 +16,16 @@ class Bee extends Circle {
   // The time of the last update.
   public float lastUpdate;
   
+  // The time when we want to go to sleep.
+  public float bedtime = -1.0;
+  // The time when we want to wake up from a sleep.
+  public float wakeUpTime;
+  
   // The x and y velocities in pixels/s
   public float vx;
   public float vy;
 
+  public BeeBehavior behavior;
   public CollisionBehavior collisionBehavior;
 
   public Bee() {
@@ -28,20 +34,28 @@ class Bee extends Circle {
   
   public Bee(float x, float y) {
     super(x, y, 10.0);
-    
-    lastUpdate = millis();
-    vx = random(-maxSpeed, maxSpeed);
-    float maxSpeedY = sqrt(maxSpeed * maxSpeed - vx * vx);
-    vy = random(-maxSpeedY, maxSpeedY);
+
+    noteUpdate();    
+    assignRandomVelocity();
     
     strokeColor = color(0);
     backgroundColor = speedColor(vx, vy);
+    
+    behavior = new SleepInTheSpotlightAndChangeDirection();
     
     if (transferImpulse) {
       collisionBehavior = new CollideAndTransferImpulse();
     } else {
       collisionBehavior = new CollideWithoutChangingImpulse();
     }
+  }
+  
+  public void noteUpdate() {
+    lastUpdate = millis();
+  }
+  
+  public void perform() {
+    behavior.invoke(this);
   }
   
   public float velocity() {
@@ -57,6 +71,12 @@ class Bee extends Circle {
     this.vx = vx;
     this.vy = vy;
     backgroundColor = speedColor(vx, vy);
+  }
+  
+  public void assignRandomVelocity() {
+    vx = random(-maxSpeed, maxSpeed);
+    float maxSpeedY = sqrt(maxSpeed * maxSpeed - vx * vx);
+    vy = random(-maxSpeedY, maxSpeedY);
   }
   
   public void detectCollision(Bee other) {
@@ -87,7 +107,7 @@ class Bee extends Circle {
     move(vx * dt, vy * dt);
   }
   
-  public void move(float dx, float dy) {
+  public void move(float dx, float dy) {      
     x += dx;
     y += dy;
     
@@ -103,5 +123,16 @@ class Bee extends Circle {
     else if (y < diameter && vy < 0) {
       vy = - vy;
     }   
+  }
+  
+  public void sleep(float sleepDurationInMilliseconds) {
+     wakeUpTime = max(wakeUpTime, millis() + sleepDurationInMilliseconds);
+     lastUpdate = wakeUpTime;
+  }
+  
+  public void wakeUp() {
+    wakeUpTime = -1.0;
+    bedtime = -1.0;
+    lastUpdate = millis();
   }
 }

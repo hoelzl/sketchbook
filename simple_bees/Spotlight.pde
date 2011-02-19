@@ -3,7 +3,7 @@
  */
 class Spotlight extends Circle {
   public Spotlight(float x, float y) {
-    super(x, y, 150.0);
+    super(x, y, 200.0);
     backgroundColor = color(250, 242, 0);
   }
   

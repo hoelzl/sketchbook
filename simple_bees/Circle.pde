@@ -43,6 +43,6 @@ class Circle {
   
   public boolean intersects(Circle other) {
     float distance = distanceFromCenter(other.x, other.y);
-    return 2.0 * distance >= this.diameter + other.diameter;
+    return 2.0 * distance <= this.diameter + other.diameter;
   }
 }

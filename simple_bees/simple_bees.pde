@@ -21,9 +21,9 @@ void setup() {
   bubblesort(allBees);
 }
 
-void moveBees(Bee[] bees) {
+void invokeBeeBehaviors(Bee[] bees) {
   for (Bee bee : bees) {
-    bee.move();
+    bee.perform();
   }
 }
 
@@ -136,7 +136,7 @@ void draw() {
     spotlight.y = mouseY;
   }
   spotlight.paint();
-  moveBees(allBees);
+  invokeBeeBehaviors(allBees);
   detectCollisions(allBees);
   paintBees(allBees);
 }
