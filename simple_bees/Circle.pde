@@ -32,4 +32,17 @@ class Circle {
     setStroke();      
     ellipse(x, y, diameter, diameter);
   }
+  
+  
+  // Compute the distance of point (x, y) from the center of this circle.
+  public float distanceFromCenter(float x, float y) {
+    float distanceX = this.x - x;
+    float distanceY = this.y - y;
+    return sqrt(distanceX * distanceX + distanceY * distanceY);
+  }
+  
+  public boolean intersects(Circle other) {
+    float distance = distanceFromCenter(other.x, other.y);
+    return 2.0 * distance >= this.diameter + other.diameter;
+  }
 }
